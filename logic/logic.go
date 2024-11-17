@@ -86,7 +86,22 @@ func InitGitRepository() error {
 		return cmd.Err
 	}
 
-	return cmd.Run()
+	err := cmd.Run()
+	if err != nil {
+		return err
+	}
+
+	cmd = exec.Command("git", "add", ".envrc", "flake.nix")
+	if cmd.Err != nil {
+		return cmd.Err
+	}
+
+	err = cmd.Run()
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func DirNamesFromEmbededDir() []string {
