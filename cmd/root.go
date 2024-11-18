@@ -15,7 +15,7 @@ var rootCmd = &cobra.Command{
 'nixdevsh go --git' initiate go env with git repository`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) < 1 {
-			ui.StartUI()
+			ui.Run()
 		}
 	},
 }
