@@ -1,7 +1,9 @@
 package cmd
 
 import (
+	"fmt"
 	"log"
+	"strings"
 
 	"github.com/mewsen/nixdevsh/logic"
 	"github.com/mewsen/nixdevsh/ui"
@@ -28,6 +30,21 @@ var rootCmd = &cobra.Command{
 		return nil
 	},
 	Run: func(cmd *cobra.Command, args []string) {
+		list, err := cmd.PersistentFlags().GetBool("list")
+		if err != nil {
+			log.Fatalln(err)
+		}
+
+		if list {
+			var out strings.Builder
+
+			for _, v := range logic.DirNamesFromEmbededDir() {
+				out.WriteString(fmt.Sprintf("%s\n", v))
+			}
+			fmt.Printf("Available shells:\n%s", out.String())
+			return
+		}
+
 		if len(args) == 0 {
 			ui.Run()
 		} else {
@@ -50,6 +67,7 @@ var rootCmd = &cobra.Command{
 
 func init() {
 	rootCmd.PersistentFlags().BoolP("git", "g", false, "Initialize Git repository")
+	rootCmd.PersistentFlags().BoolP("list", "l", false, "List available shells")
 }
 
 func Execute() {
