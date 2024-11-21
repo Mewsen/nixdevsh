@@ -1,7 +1,7 @@
 <h1 align="center">nixdevsh</h1>
 
 <p align="center">
-  <a href="https://github.com/mewsen/nixdevsh/blob/master/license">
+  <a href="https://github.com/mewsen/nixdevsh/blob/master/LICENSE">
     <img src="https://img.shields.io/badge/License-MIT-yellow.svg" />
   </a>
 </p>
