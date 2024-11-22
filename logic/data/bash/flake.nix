@@ -19,8 +19,18 @@
         devShells.default = pkgs.mkShell {
           packages = with pkgs; [
             bash
-            nodePackages.bash-language-server
+            bash-language-server
             shellcheck
+
+            #Nix
+            nixfmt-classic
+            nil
+
+            # For treesitter
+            libgcc
+
+            fd
+            ripgrep
           ];
         };
       });

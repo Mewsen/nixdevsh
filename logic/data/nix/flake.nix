@@ -23,7 +23,15 @@
             nixfmt-classic
             statix
             vulnix
-            haskellPackages.dhall-nix
+
+            # LSP
+            nil
+
+            # For treesitter
+            libgcc
+
+            fd
+            ripgrep
           ];
         };
       });

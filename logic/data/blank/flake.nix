@@ -15,6 +15,20 @@
       "aarch64-darwin"
     ] (system:
       let pkgs = import nixpkgs { inherit system; };
-      in { devShells.default = pkgs.mkShell { packages = with pkgs; [ ]; }; });
+      in {
+        devShells.default = pkgs.mkShell {
+          packages = with pkgs; [
+            #Nix
+            nixfmt-classic
+            nil
+
+            # For treesitter
+            libgcc
+
+            fd
+            ripgrep
+          ];
+        };
+      });
 }
 

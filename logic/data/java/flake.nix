@@ -25,7 +25,22 @@
         };
 
         devShells.default = pkgs.mkShell {
-          packages = with pkgs; [ jdk maven jdt-langauge-server lombok ];
+          packages = with pkgs; [
+            jdk
+            maven
+            jdt-langauge-server
+            lombok
+
+            #Nix
+            nixfmt-classic
+            nil
+
+            # For treesitter
+            libgcc
+
+            fd
+            ripgrep
+          ];
           env = {
             JDTLS_JVM_ARGS = "-javaagent:${pkgs.lombok}/share/java/lombok.jar";
           };

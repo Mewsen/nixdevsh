@@ -17,8 +17,20 @@
       in {
         devShells.default = pkgs.mkShell {
           packages = with pkgs;
-            [ ocaml ocamlformat ]
-            ++ (with pkgs.ocamlPackages; dune_3 odoc ocaml-lsp);
+            [
+              ocaml
+              ocamlformat
+
+              #Nix
+              nixfmt-classic
+              nil
+
+              # For treesitter
+              libgcc
+
+              fd
+              ripgrep
+            ] ++ (with pkgs.ocamlPackages; dune_3 odoc ocaml-lsp);
         };
       });
 }

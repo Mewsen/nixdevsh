@@ -19,7 +19,22 @@
         devShells.default = pkgs.mkShell {
           packages = with pkgs; [
             bun
-            nodePackages_latest.typescript-language-server
+
+            # LSP's
+            typescript-language-server
+            vtsls
+            vscode-langservers-extracted
+            tailwindcss-language-server
+
+            #Nix
+            nixfmt-classic
+            nil
+
+            # For treesitter
+            libgcc
+
+            fd
+            ripgrep
           ];
         };
       });

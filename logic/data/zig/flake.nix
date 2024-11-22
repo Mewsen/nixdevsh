@@ -15,7 +15,20 @@
     ] (system:
       let pkgs = import nixpkgs { inherit system; };
       in {
-        devShells.default =
-          pkgs.mkShell { packages = with pkgs; [ zls zig lldb ]; };
+        devShells.default = pkgs.mkShell {
+          packages = with pkgs; [
+            zls
+            zig
+            lldb
+
+            #Nix
+            nixfmt-classic
+            nil
+
+            fd
+            ripgrep
+
+          ];
+        };
       });
 }

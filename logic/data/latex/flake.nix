@@ -20,6 +20,19 @@
             texlab
             texlive.combined.scheme-full
             tectonic
+
+            # LSP
+            ltex-ls
+
+            # Nix
+            nixfmt-classic
+            nil
+
+            # For treesitter
+            libgcc
+
+            fd
+            ripgrep
           ];
         };
       });

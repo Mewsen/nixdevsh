@@ -22,7 +22,22 @@
       in {
         overlays.default = final: prev: { go = final."go_1_123"; };
 
-        devShells.default =
-          pkgs.mkShell { packages = with pkgs; [ go gotools gopls ]; };
+        devShells.default = pkgs.mkShell {
+          packages = with pkgs; [
+            go
+            gotools
+            gopls
+
+            #Nix
+            nixfmt-classic
+            nil
+
+            # For treesitter
+            libgcc
+
+            fd
+            ripgrep
+          ];
+        };
       });
 }

@@ -17,10 +17,23 @@
       in {
         devShells.default = pkgs.mkShell {
           packages = with pkgs; [
-            nodePackages_latest.typescript-language-server
             nodejs
-            nodePackages.pnpm
-            yarn
+
+            # LSP's
+            typescript-language-server
+            vtsls
+            vscode-langservers-extracted
+            tailwindcss-language-server
+
+            #Nix
+            nixfmt-classic
+            nil
+
+            # For treesitter
+            libgcc
+
+            fd
+            ripgrep
           ];
         };
       });

@@ -16,7 +16,28 @@
       let pkgs = import nixpkgs { inherit system; };
       in {
         devShells.default = pkgs.mkShell {
-          packages = with pkgs; [ php phpactor phpPackages.composer ];
+          packages = with pkgs; [
+            # PHP
+            php
+            phpactor
+            phpPackages.composer
+
+            # LSP's
+            typescript-language-server
+            vtsls
+            vscode-langservers-extracted
+            tailwindcss-language-server
+
+            #Nix
+            nixfmt-classic
+            nil
+
+            # For treesitter
+            libgcc
+
+            fd
+            ripgrep
+          ];
         };
       });
 }

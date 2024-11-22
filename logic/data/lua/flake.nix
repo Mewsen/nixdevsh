@@ -15,7 +15,24 @@
     ] (system:
       let pkgs = import nixpkgs { inherit system; };
       in {
-        devShells.default =
-          pkgs.mkShell { packages = with pkgs; [ lua lua-language-server ]; };
+        devShells.default = pkgs.mkShell {
+          packages = with pkgs; [
+            lua
+            luarocks
+
+            # LSP
+            lua-language-server
+
+            #Nix
+            nixfmt-classic
+            nil
+
+            # For treesitter
+            libgcc
+
+            fd
+            ripgrep
+          ];
+        };
       });
 }
