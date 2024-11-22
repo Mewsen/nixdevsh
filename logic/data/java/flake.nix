@@ -7,7 +7,6 @@
   };
 
   outputs = { self, nixpkgs, flake-utils }:
-
     flake-utils.lib.eachSystem [
       "x86_64-linux"
       "aarch64-linux"
@@ -21,12 +20,15 @@
         };
       in {
         overlays.default = final: prev: rec {
-          jdk = prev.jdk22;
+          jdk = prev.jdk23;
           maven = prev.maven.override { jdk_headless = jdk; };
         };
 
         devShells.default = pkgs.mkShell {
-          packages = with pkgs; [ jdk maven jdt-langauge-server ];
+          packages = with pkgs; [ jdk maven jdt-langauge-server lombok ];
+          env = {
+            JDTLS_JVM_ARGS = "-javaagent:${pkgs.lombok}/share/java/lombok.jar";
+          };
         };
       });
 }
