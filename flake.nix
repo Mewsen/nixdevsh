@@ -35,7 +35,7 @@
 
         p = pkgs.buildGoApplication {
           pname = "nixdevsh";
-          version = "0.0.2";
+          version = "0.0.3";
           src = ./.;
           pwd = ./.;
           modules = ./gomod2nix.toml;
