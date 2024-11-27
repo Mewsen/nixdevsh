@@ -1,7 +1,6 @@
 package logic
 
 import (
-	"bytes"
 	"embed"
 	"io"
 	"log"
@@ -10,69 +9,55 @@ import (
 	"path/filepath"
 )
 
-// TODO: Add option to add .direnv to .gitignore
-
 //go:embed data/*
 var content embed.FS
 
 const (
 	flakeDirectory = "data"
-	flakeFilename  = "flake.nix"
+	direnv         = ".direnv"
 	envrc          = ".envrc"
 )
 
-func CreateFlakeFile(name string) error {
-	selectedFlake := name
+func CopyFilesFromEmbededDir(dirName string, dstPath string) error {
+	srcDirectoryPath := filepath.Join(flakeDirectory, dirName)
 
-	pwd, err := os.Getwd()
+	files, err := content.ReadDir(srcDirectoryPath)
 	if err != nil {
 		return err
 	}
 
-	if _, err := os.Stat(filepath.Join(pwd, flakeFilename)); err == nil {
-		log.Fatal("Error creating flake.nix:", "File already exists")
-	}
+	for _, file := range files {
+		dstFilePath := filepath.Join(dstPath, file.Name())
 
-	file, err := os.Create(filepath.Join(pwd, flakeFilename))
-	if err != nil {
-		return err
-	}
+		srcFile, err := content.Open(filepath.Join(srcDirectoryPath, file.Name()))
+		if err != nil {
+			return err
+		}
+		defer srcFile.Close()
 
-	flakeFile, err := content.ReadFile(filepath.Join(flakeDirectory, selectedFlake, "flake.nix"))
-	if err != nil {
-		return err
-	}
+		dstFile, err := os.Create(dstFilePath)
+		if err != nil {
+			return err
+		}
+		defer dstFile.Close()
 
-	_, err = io.Copy(file, bytes.NewReader(flakeFile))
-	if err != nil {
-		return err
-	}
-
-	err = file.Sync()
-	if err != nil {
-		return err
+		_, err = io.Copy(dstFile, srcFile)
+		if err != nil {
+			return err
+		}
 	}
 
 	return nil
 }
 
-func CreateEnvRCInCWD() error {
-	cwd, err := os.Getwd()
+func CreateEnvRC(path string) error {
+	file, err := os.Create(filepath.Join(path, envrc))
 	if err != nil {
 		return err
 	}
-
-	file, err := os.Create(filepath.Join(cwd, envrc))
-	if err != nil {
-		return err
-	}
+	defer file.Close()
 
 	_, err = file.WriteString("use flake")
-	if err != nil {
-		return err
-	}
-
-	err = file.Sync()
 	if err != nil {
 		return err
 	}
@@ -101,6 +86,11 @@ func InitGitRepository() error {
 		return err
 	}
 
+	err = addFileToGitIgnore(direnv)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -117,4 +107,19 @@ func DirNamesFromEmbededDir() []string {
 	}
 
 	return items
+}
+
+func addFileToGitIgnore(name string) error {
+	file, err := os.OpenFile(".gitignore", os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	_, err = file.WriteString(name)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

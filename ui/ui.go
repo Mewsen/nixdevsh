@@ -2,6 +2,7 @@ package ui
 
 import (
 	"log"
+	"os"
 
 	"github.com/charmbracelet/huh"
 	"github.com/mewsen/nixdevsh/logic"
@@ -32,22 +33,25 @@ func (ui Ui) Run() {
 		log.Fatalln(err)
 	}
 
-	{
-		err = logic.CreateFlakeFile(ui.shellSelection)
+	cwd, err := os.Getwd()
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	err = logic.CopyFilesFromEmbededDir(ui.shellSelection, cwd)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	err = logic.CreateEnvRC(cwd)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	if ui.initGitRepo {
+		err = logic.InitGitRepository()
 		if err != nil {
 			log.Fatalln(err)
-		}
-
-		err = logic.CreateEnvRCInCWD()
-		if err != nil {
-			log.Fatalln(err)
-		}
-
-		if ui.initGitRepo {
-			err = logic.InitGitRepository()
-			if err != nil {
-				log.Fatalln(err)
-			}
 		}
 	}
 }

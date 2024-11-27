@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"log"
+	"os"
 	"strings"
 
 	"github.com/mewsen/nixdevsh/logic"
@@ -39,7 +40,10 @@ var rootCmd = &cobra.Command{
 			var out strings.Builder
 
 			for _, v := range logic.DirNamesFromEmbededDir() {
-				out.WriteString(fmt.Sprintf("%s\n", v))
+				_, err = out.WriteString(fmt.Sprintf("%s\n", v))
+				if err != nil {
+					log.Fatalln(err)
+				}
 			}
 			fmt.Printf("Available shells:\n%s", out.String())
 			return
@@ -48,9 +52,20 @@ var rootCmd = &cobra.Command{
 		if len(args) == 0 {
 			ui.Run()
 		} else {
+			cwd, err := os.Getwd()
+			if err != nil {
+				log.Fatalln(err)
+			}
 
-			logic.CreateFlakeFile(args[0])
-			logic.CreateEnvRCInCWD()
+			err = logic.CopyFilesFromEmbededDir(args[0], cwd)
+			if err != nil {
+				log.Fatalln(err)
+			}
+
+			err = logic.CreateEnvRC(cwd)
+			if err != nil {
+				log.Fatalln(err)
+			}
 
 			git, err := cmd.PersistentFlags().GetBool("git")
 			if err != nil {
@@ -58,7 +73,10 @@ var rootCmd = &cobra.Command{
 			}
 
 			if git {
-				logic.InitGitRepository()
+				err = logic.InitGitRepository()
+				if err != nil {
+					log.Fatalln(err)
+				}
 			}
 		}
 	},
