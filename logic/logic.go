@@ -81,17 +81,17 @@ func InitGitRepository() error {
 		return err
 	}
 
-	cmd = exec.Command("git", "add", ".envrc", "flake.nix")
+	err = addFileToGitIgnore(direnv)
+	if err != nil {
+		return err
+	}
+
+	cmd = exec.Command("git", "add", "-A")
 	if cmd.Err != nil {
 		return cmd.Err
 	}
 
 	err = cmd.Run()
-	if err != nil {
-		return err
-	}
-
-	err = addFileToGitIgnore(direnv)
 	if err != nil {
 		return err
 	}
