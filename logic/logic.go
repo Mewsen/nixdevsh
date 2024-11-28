@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strings"
 )
 
 //go:embed data/*
@@ -28,6 +29,10 @@ func CopyFilesFromEmbededDir(dirName string, dstPath string) error {
 
 	for _, file := range files {
 		dstFilePath := filepath.Join(dstPath, file.Name())
+
+		if strings.HasSuffix(file.Name(), ".embed") {
+			dstFilePath = strings.Replace(dstFilePath, ".embed", "", 1)
+		}
 
 		srcFile, err := content.Open(filepath.Join(srcDirectoryPath, file.Name()))
 		if err != nil {
