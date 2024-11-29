@@ -35,5 +35,18 @@
             ripgrep
           ];
         };
+        packages.default = pkgs.stdenv.mkDerivation rec {
+          name = "latex-document";
+          version = "0.0.1";
+          pwd = ./.;
+          src = ./.;
+          buildInputs = [ pkgs.texlive.combined.scheme-full ];
+
+          buildPhase = ''
+            export HOME=.
+            latexmk -jobname=${name} -pdf -interaction=nonstopmode -output-directory=$out document.tex
+          '';
+        };
       });
+
 }
